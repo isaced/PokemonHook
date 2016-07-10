@@ -12,6 +12,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import <objc/runtime.h>
+#import "POControlView.h"
 
 @interface CLLocation(Swizzle)
 
@@ -21,6 +22,13 @@
 
 static float x = -1;
 static float y = -1;
+
+static float controlOffsetX = 0;
+static float controlOffsetY = 0;
+
+static POControlView *controlV;
+
+static const float controlOffset = 0.000050;
 
 + (void) load {
     Method m1 = class_getInstanceMethod(self, @selector(coordinate));
@@ -35,6 +43,9 @@ static float y = -1;
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"_fake_y"]) {
         y = [[[NSUserDefaults standardUserDefaults] valueForKey:@"_fake_y"] floatValue];
     };
+    
+    // init
+    [self controlView];
 }
 
 - (CLLocationCoordinate2D) coordinate_ {
@@ -43,15 +54,45 @@ static float y = -1;
     
     // 算与联合广场的坐标偏移量
     if (x == -1 && y == -1) {
-        x = pos.latitude - 37.7883923;
-        y = pos.longitude - (-122.4076413);
+        x = pos.latitude - -36.851638;
+        y = pos.longitude - (174.765068);
         
         [[NSUserDefaults standardUserDefaults] setValue:@(x) forKey:@"_fake_x"];
         [[NSUserDefaults standardUserDefaults] setValue:@(y) forKey:@"_fake_y"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
-    return CLLocationCoordinate2DMake(pos.latitude-x, pos.longitude-y);
+    return CLLocationCoordinate2DMake(pos.latitude-x + (controlOffsetX), pos.longitude-y + (controlOffsetY));
+}
+
++ (POControlView *)controlView{
+    if (!controlV) {
+        controlV = [[POControlView alloc] init];
+        controlV.controlCallback =  ^(POControlViewDirection direction){
+            switch (direction) {
+                case POControlViewDirectionUp:
+                    x+=controlOffset;
+                    break;
+                case POControlViewDirectionDown:
+                    x-=controlOffset;
+                    break;
+                case POControlViewDirectionLeft:
+                    y-=controlOffset;
+                    break;
+                case POControlViewDirectionRight:
+                    y+=controlOffset;
+                    break;
+                default:
+                    break;
+            }
+        };
+        
+        // add to key window
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[[UIApplication sharedApplication] keyWindow] addSubview:controlV];
+        });
+    }
+    return controlV;
 }
 
 @end
