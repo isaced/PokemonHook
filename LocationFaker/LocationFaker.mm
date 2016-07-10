@@ -28,8 +28,6 @@ static float controlOffsetY = 0;
 
 static POControlView *controlV;
 
-static const float controlOffset = 0.000050;
-
 + (void) load {
     Method m1 = class_getInstanceMethod(self, @selector(coordinate));
     Method m2 = class_getInstanceMethod(self, @selector(coordinate_));
@@ -71,16 +69,16 @@ static const float controlOffset = 0.000050;
         controlV.controlCallback =  ^(POControlViewDirection direction){
             switch (direction) {
                 case POControlViewDirectionUp:
-                    x+=controlOffset;
+                    x+=self.controlOffset;
                     break;
                 case POControlViewDirectionDown:
-                    x-=controlOffset;
+                    x-=self.controlOffset;
                     break;
                 case POControlViewDirectionLeft:
-                    y-=controlOffset;
+                    y-=self.controlOffset;
                     break;
                 case POControlViewDirectionRight:
-                    y+=controlOffset;
+                    y+=self.controlOffset;
                     break;
                 default:
                     break;
@@ -93,6 +91,16 @@ static const float controlOffset = 0.000050;
         });
     }
     return controlV;
+}
+
++ (float)controlOffset{
+    return [self randFloatBetween:0.000150 to:0.000300];
+}
+
++(float) randFloatBetween:(float)low to:(float)high
+{
+    float diff = high - low;
+    return (((float) rand() / RAND_MAX) * diff) + low;
 }
 
 @end
