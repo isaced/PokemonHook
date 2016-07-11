@@ -52,8 +52,9 @@ static POControlView *controlV;
     
     // 算与联合广场的坐标偏移量
     if (x == -1 && y == -1) {
-        x = pos.latitude - -36.851638;
-        y = pos.longitude - (174.765068);
+        
+        x = pos.latitude - (-36.852400);
+        y = pos.longitude - (174.762750);
         
         [[NSUserDefaults standardUserDefaults] setValue:@(x) forKey:@"_fake_x"];
         [[NSUserDefaults standardUserDefaults] setValue:@(y) forKey:@"_fake_y"];
