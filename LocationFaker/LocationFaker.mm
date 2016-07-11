@@ -43,7 +43,7 @@ static POControlView *controlV;
     };
     
     // init
-    [self controlView];
+//    [self controlView];
 }
 
 - (CLLocationCoordinate2D) coordinate_ {
