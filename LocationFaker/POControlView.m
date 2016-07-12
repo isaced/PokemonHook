@@ -51,6 +51,17 @@
     right.tag = 104;
     [right addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:right];
+    
+    self.alpha = 0;
+    
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap)];
+    doubleTap.numberOfTapsRequired = 3;
+
+    [self addGestureRecognizer:doubleTap];
+}
+
+- (void)doubleTap{
+    self.alpha = 1 - self.alpha;
 }
 
 - (void)buttonAction:(UIButton *)sender{
