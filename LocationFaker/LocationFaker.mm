@@ -13,6 +13,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import <objc/runtime.h>
 #import "POControlView.h"
+#import "UIButton+Block.h"
 
 @interface CLLocation(Swizzle)
 
@@ -44,6 +45,8 @@ static POControlView *controlV;
     
     // init
 //    [self controlView];
+    
+    [self changeInitialLocationButton];
 }
 
 - (CLLocationCoordinate2D) coordinate_ {
@@ -70,16 +73,16 @@ static POControlView *controlV;
         controlV.controlCallback =  ^(POControlViewDirection direction){
             switch (direction) {
                 case POControlViewDirectionUp:
-                    x+=self.controlOffset;
+                    controlOffsetX -= self.controlOffset;
                     break;
                 case POControlViewDirectionDown:
-                    x-=self.controlOffset;
+                    controlOffsetX += self.controlOffset;
                     break;
                 case POControlViewDirectionLeft:
-                    y-=self.controlOffset;
+                    controlOffsetY += self.controlOffset;
                     break;
                 case POControlViewDirectionRight:
-                    y+=self.controlOffset;
+                    controlOffsetY -= self.controlOffset;
                     break;
                 default:
                     break;
@@ -98,10 +101,71 @@ static POControlView *controlV;
     return [self randFloatBetween:0.000150 to:0.000300];
 }
 
-+(float) randFloatBetween:(float)low to:(float)high
++ (float) randFloatBetween:(float)low to:(float)high
 {
     float diff = high - low;
     return (((float) rand() / RAND_MAX) * diff) + low;
+}
+
+static UIButton *locationButton;
++ (void)changeInitialLocationButton {
+    if (!locationButton) {
+        locationButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        
+        locationButton.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.7];
+        
+        [locationButton setTitle:@"L" forState:UIControlStateNormal];
+        
+        [locationButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        
+        locationButton.frame = CGRectMake([UIScreen mainScreen].bounds.size.width / 2.0 - 22, 20, 44, 44);
+        
+        [locationButton touchUpInSideWithBlock:^{
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"666航空" message:@"准备坐飞机去哪里抓小精灵？" preferredStyle:UIAlertControllerStyleAlert];
+            
+            [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                textField.placeholder = @"纬度";
+            }];
+            
+            [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                textField.placeholder = @"经度";
+            }];
+            
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+            
+            UIAlertAction *commit = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                
+                // 修改 x, y 以及userdefaults缓存
+                CGFloat latitude = [[alert.textFields[0] text] floatValue];
+                
+                CGFloat longtitude = [[alert.textFields[1] text] floatValue];
+                
+                x = latitude;
+                y = longtitude;
+                
+                [[NSUserDefaults standardUserDefaults] setValue:@(x) forKey:@"_fake_x"];
+                [[NSUserDefaults standardUserDefaults] setValue:@(y) forKey:@"_fake_y"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                
+                [locationButton removeFromSuperview];
+                
+                [locationButton release];
+            }];
+            
+            [alert addAction:cancel];
+            [alert addAction:commit];
+            
+            [[[[UIApplication sharedApplication].delegate window] rootViewController] presentViewController:alert animated:YES completion:nil];
+            
+            [alert release];
+            [cancel release];
+            [commit release];
+        }];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[[UIApplication sharedApplication].delegate window] addSubview:locationButton];
+        });
+    }
 }
 
 @end

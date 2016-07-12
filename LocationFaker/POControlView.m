@@ -18,7 +18,7 @@
 }
 
 - (void)initUI{
-    self.frame = CGRectMake(0, 20, 100, 100);
+    self.frame = CGRectMake(0, 80, 100, 100);
     self.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.200];
     
     UIButton *up = [[UIButton alloc] initWithFrame:CGRectMake(25, 0, 50, 50)];

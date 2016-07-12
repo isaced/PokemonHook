@@ -14,6 +14,8 @@
 		AD779A9E1D2F2A330043F11C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD779A9D1D2F2A330043F11C /* Foundation.framework */; };
 		AD779AA81D2F2A350043F11C /* LocationFaker.mm in Sources */ = {isa = PBXBuildFile; fileRef = AD779AA71D2F2A350043F11C /* LocationFaker.mm */; };
 		AD779AB31D2F2B2F0043F11C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD779AB21D2F2B2F0043F11C /* CoreLocation.framework */; };
+		D69EE4411D34908700A05B7B /* UIButton+Block.h in Headers */ = {isa = PBXBuildFile; fileRef = D69EE43F1D34908700A05B7B /* UIButton+Block.h */; };
+		D69EE4421D34908700A05B7B /* UIButton+Block.m in Sources */ = {isa = PBXBuildFile; fileRef = D69EE4401D34908700A05B7B /* UIButton+Block.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		AD779AA71D2F2A350043F11C /* LocationFaker.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LocationFaker.mm; sourceTree = "<group>"; };
 		AD779AAC1D2F2A350043F11C /* LocationFaker.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = LocationFaker.plist; path = Package/Library/MobileSubstrate/DynamicLibraries/LocationFaker.plist; sourceTree = "<group>"; };
 		AD779AB21D2F2B2F0043F11C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		D69EE43F1D34908700A05B7B /* UIButton+Block.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+Block.h"; sourceTree = "<group>"; };
+		D69EE4401D34908700A05B7B /* UIButton+Block.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Block.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +82,8 @@
 		AD779A9F1D2F2A330043F11C /* LocationFaker */ = {
 			isa = PBXGroup;
 			children = (
+				D69EE43F1D34908700A05B7B /* UIButton+Block.h */,
+				D69EE4401D34908700A05B7B /* UIButton+Block.m */,
 				0DD6A04A1D3291AC001CF396 /* POControlView.h */,
 				0DD6A04B1D3291AC001CF396 /* POControlView.m */,
 				AD779AA71D2F2A350043F11C /* LocationFaker.mm */,
@@ -145,6 +151,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D69EE4411D34908700A05B7B /* UIButton+Block.h in Headers */,
 				0DD6A04C1D3291AC001CF396 /* POControlView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -221,6 +228,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D69EE4421D34908700A05B7B /* UIButton+Block.m in Sources */,
 				AD779AA81D2F2A350043F11C /* LocationFaker.mm in Sources */,
 				0DD6A04D1D3291AC001CF396 /* POControlView.m in Sources */,
 			);
