@@ -14,6 +14,7 @@
 #import <objc/runtime.h>
 #import "POControlView.h"
 #import "UIButton+Block.h"
+#import "UIAlertView+Blocks.h"
 
 @interface CLLocation(Swizzle)
 
@@ -44,7 +45,7 @@ static POControlView *controlV;
     };
     
     // init
-//    [self controlView];
+    [self controlView];
     
     [self changeInitialLocationButton];
 }
@@ -112,58 +113,42 @@ static UIButton *locationButton;
     if (!locationButton) {
         locationButton = [UIButton buttonWithType:UIButtonTypeCustom];
         
-        locationButton.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.7];
-        
-        [locationButton setTitle:@"L" forState:UIControlStateNormal];
+//        locationButton.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.7];
+//        [locationButton setTitle:@"✈️" forState:UIControlStateNormal];
         
         [locationButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         
         locationButton.frame = CGRectMake([UIScreen mainScreen].bounds.size.width / 2.0 - 22, 20, 44, 44);
         
-        [locationButton touchUpInSideWithBlock:^{
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"666航空" message:@"准备坐飞机去哪里抓小精灵？" preferredStyle:UIAlertControllerStyleAlert];
-            
-            [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                textField.placeholder = @"纬度(如：-32.164823)";
+        [locationButton touchUpOutSideWithBlock:^{
+            UIAlertView *alertView = [UIAlertView showWithTitle:@"666航空" message:@"准备飞去那里抓小精灵？" style:UIAlertViewStyleLoginAndPasswordInput cancelButtonTitle:@"取消" otherButtonTitles:@[@"确定"] tapBlock:^(UIAlertView * _Nonnull alertView, NSInteger buttonIndex) {
+                if (buttonIndex == 1) {
+                    // 修改 x, y 以及userdefaults缓存
+                    CGFloat latitude = [[[alertView textFieldAtIndex:0] text] floatValue];
+                    
+                    CGFloat longtitude = [[[alertView textFieldAtIndex:1] text] floatValue];
+                    
+                    x = latitude;
+                    y = longtitude;
+                    
+                    [[NSUserDefaults standardUserDefaults] setValue:@(x) forKey:@"_fake_x"];
+                    [[NSUserDefaults standardUserDefaults] setValue:@(y) forKey:@"_fake_y"];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                }
+                
+//                [locationButton removeFromSuperview];
             }];
             
-            [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                textField.placeholder = @"经度(如：164.321891)";
-            }];
-            
-            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-            
-            UIAlertAction *commit = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                
-                // 修改 x, y 以及userdefaults缓存
-                CGFloat latitude = [[alert.textFields[0] text] floatValue];
-                
-                CGFloat longtitude = [[alert.textFields[1] text] floatValue];
-                
-                x = latitude;
-                y = longtitude;
-                
-                [[NSUserDefaults standardUserDefaults] setValue:@(x) forKey:@"_fake_x"];
-                [[NSUserDefaults standardUserDefaults] setValue:@(y) forKey:@"_fake_y"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                
-                [locationButton removeFromSuperview];
-                
-                [locationButton release];
-            }];
-            
-            [alert addAction:cancel];
-            [alert addAction:commit];
-            
-            [[[[UIApplication sharedApplication].delegate window] rootViewController] presentViewController:alert animated:YES completion:nil];
-            
-            [alert release];
-            [cancel release];
-            [commit release];
+            [alertView textFieldAtIndex:0].placeholder = @"纬度(如：-32.164823)";
+            [alertView textFieldAtIndex:1].placeholder = @"经度(如：164.321891)";
+            [alertView textFieldAtIndex:1].secureTextEntry = NO;
         }];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [[[UIApplication sharedApplication].delegate window] addSubview:locationButton];
+            [[[UIApplication sharedApplication] keyWindow] addSubview:locationButton];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(120 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [locationButton removeFromSuperview];
+            });
         });
     }
 }

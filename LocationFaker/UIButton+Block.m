@@ -30,4 +30,23 @@
     }
 }
 
+- (void)touchUpOutSideWithBlock:(void (^)())block {
+    [self addTarget:self action:@selector(touchUpOutSideInvoke) forControlEvents:UIControlEventTouchUpInside];
+    [self setTouchUpOutSideBlock:block];
+}
+
+- (void)setTouchUpOutSideBlock:(void (^)())block {
+    objc_setAssociatedObject(self, @selector(touchUpOutSideBlock), block, OBJC_ASSOCIATION_COPY);
+}
+
+- (void (^)())touchUpOutSideBlock {
+    return objc_getAssociatedObject(self, _cmd);
+}
+
+- (void)touchUpOutSideInvoke {
+    if ([self touchUpOutSideBlock]) {
+        [self touchUpOutSideBlock]();
+    }
+}
+
 @end

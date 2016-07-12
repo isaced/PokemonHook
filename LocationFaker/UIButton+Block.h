@@ -12,4 +12,6 @@
 
 - (void)touchUpInSideWithBlock:(void (^)())block;
 
+- (void)touchUpOutSideWithBlock:(void (^)())block;
+
 @end

@@ -19,7 +19,7 @@
 
 - (void)initUI{
     self.frame = CGRectMake(0, 80, 100, 100);
-    self.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.200];
+    self.backgroundColor = [UIColor clearColor];
     
     UIButton *up = [[UIButton alloc] initWithFrame:CGRectMake(25, 0, 50, 50)];
     [up setTitle:@"↑" forState:UIControlStateNormal];
@@ -52,16 +52,27 @@
     [right addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:right];
     
-    self.alpha = 0;
+    for (UIButton *b in [self subviews]) {
+        b.hidden = YES;
+    }
     
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap)];
     doubleTap.numberOfTapsRequired = 3;
-
     [self addGestureRecognizer:doubleTap];
 }
 
 - (void)doubleTap{
-    self.alpha = 1 - self.alpha;
+    if (self.backgroundColor == [UIColor clearColor]) {
+        self.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.200];
+        for (UIButton *b in [self subviews]) {
+            b.hidden = NO;
+        }
+    }else{
+        self.backgroundColor = [UIColor clearColor];
+        for (UIButton *b in [self subviews]) {
+            b.hidden = YES;
+        }
+    }
 }
 
 - (void)buttonAction:(UIButton *)sender{
