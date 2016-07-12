@@ -124,11 +124,11 @@ static UIButton *locationButton;
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"666航空" message:@"准备坐飞机去哪里抓小精灵？" preferredStyle:UIAlertControllerStyleAlert];
             
             [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                textField.placeholder = @"纬度";
+                textField.placeholder = @"纬度(如：-32.164823)";
             }];
             
             [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                textField.placeholder = @"经度";
+                textField.placeholder = @"经度(如：164.321891)";
             }];
             
             UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
