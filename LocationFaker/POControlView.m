@@ -57,7 +57,7 @@
     }
     
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap)];
-    doubleTap.numberOfTapsRequired = 3;
+    doubleTap.numberOfTapsRequired = 10;
     [self addGestureRecognizer:doubleTap];
 }
 

@@ -28,6 +28,12 @@ static float y = -1;
 static float controlOffsetX = 0;
 static float controlOffsetY = 0;
 
+/**
+ *  默认出生点
+ */
+static float defaultLatitude = -36.852400;
+static float defaultLongtitude = 174.762750;
+
 static POControlView *controlV;
 
 + (void) load {
@@ -44,6 +50,14 @@ static POControlView *controlV;
         y = [[[NSUserDefaults standardUserDefaults] valueForKey:@"_fake_y"] floatValue];
     };
     
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"_fake_defaultLatitude"]) {
+        defaultLatitude = [[[NSUserDefaults standardUserDefaults] valueForKey:@"_fake_defaultLatitude"] floatValue];
+    }
+    
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"_fake_defaultLongtitude"]) {
+        defaultLongtitude = [[[NSUserDefaults standardUserDefaults] valueForKey:@"_fake_defaultLongtitude"] floatValue];
+    }
+    
     // init
     [self controlView];
     
@@ -57,15 +71,15 @@ static POControlView *controlV;
     // 算与联合广场的坐标偏移量
     if (x == -1 && y == -1) {
         
-        x = pos.latitude - (-36.852400);
-        y = pos.longitude - (174.762750);
+        x = pos.latitude - defaultLatitude;
+        y = pos.longitude - defaultLongtitude;
         
         [[NSUserDefaults standardUserDefaults] setValue:@(x) forKey:@"_fake_x"];
         [[NSUserDefaults standardUserDefaults] setValue:@(y) forKey:@"_fake_y"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
-    return CLLocationCoordinate2DMake(pos.latitude-x + (controlOffsetX), pos.longitude-y + (controlOffsetY));
+    return CLLocationCoordinate2DMake(pos.latitude- x - (controlOffsetX), pos.longitude - y - (controlOffsetY));
 }
 
 + (POControlView *)controlView{
@@ -113,9 +127,6 @@ static UIButton *locationButton;
     if (!locationButton) {
         locationButton = [UIButton buttonWithType:UIButtonTypeCustom];
         
-//        locationButton.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.7];
-//        [locationButton setTitle:@"✈️" forState:UIControlStateNormal];
-        
         [locationButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         
         locationButton.frame = CGRectMake([UIScreen mainScreen].bounds.size.width / 2.0 - 22, 20, 44, 44);
@@ -123,20 +134,27 @@ static UIButton *locationButton;
         [locationButton touchUpOutSideWithBlock:^{
             UIAlertView *alertView = [UIAlertView showWithTitle:@"666航空" message:@"准备飞去那里抓小精灵？" style:UIAlertViewStyleLoginAndPasswordInput cancelButtonTitle:@"取消" otherButtonTitles:@[@"确定"] tapBlock:^(UIAlertView * _Nonnull alertView, NSInteger buttonIndex) {
                 if (buttonIndex == 1) {
-                    // 修改 x, y 以及userdefaults缓存
-                    CGFloat latitude = [[[alertView textFieldAtIndex:0] text] floatValue];
-                    
-                    CGFloat longtitude = [[[alertView textFieldAtIndex:1] text] floatValue];
-                    
-                    x = latitude;
-                    y = longtitude;
-                    
-                    [[NSUserDefaults standardUserDefaults] setValue:@(x) forKey:@"_fake_x"];
-                    [[NSUserDefaults standardUserDefaults] setValue:@(y) forKey:@"_fake_y"];
-                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    @try {
+                        // 修改 x, y 以及userdefaults缓存
+                        CGFloat latitude = [[[alertView textFieldAtIndex:0] text] floatValue];
+                        
+                        CGFloat longtitude = [[[alertView textFieldAtIndex:1] text] floatValue];
+                        
+                        
+                        defaultLatitude = latitude;
+                        defaultLongtitude = longtitude;
+                        
+                        [[NSUserDefaults standardUserDefaults] setValue:@(latitude) forKey:@"_fake_defaultLatitude"];
+                        [[NSUserDefaults standardUserDefaults] setValue:@(longtitude) forKey:@"_fake_defaultLongtitude"];
+                        [[NSUserDefaults standardUserDefaults] synchronize];
+                        
+                        // 由于更新了默认起始位置，所以需要标记x y为－1
+                        x = -1;
+                        y = -1;
+                    } @catch (NSException *exception) {
+                        NSLog(@"%@", exception);
+                    }
                 }
-                
-//                [locationButton removeFromSuperview];
             }];
             
             [alertView textFieldAtIndex:0].placeholder = @"纬度(如：-32.164823)";
