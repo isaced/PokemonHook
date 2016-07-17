@@ -18,10 +18,13 @@
 }
 
 - (void)initUI{
-    self.frame = CGRectMake(0, 80, 100, 100);
+    self.layer.anchorPoint = CGPointMake(0, 0);
+    self.frame = CGRectMake(0, 80, 150, 150);
     self.backgroundColor = [UIColor clearColor];
+    self.layer.cornerRadius = 10.f;
     
-    UIButton *up = [[UIButton alloc] initWithFrame:CGRectMake(25, 0, 50, 50)];
+    UIButton *up = [[UIButton alloc] initWithFrame:CGRectMake(50, 0, 50, 50)];
+    up.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.5];
     [up setTitle:@"↑" forState:UIControlStateNormal];
     up.titleLabel.font = [UIFont systemFontOfSize:20.0];
     up.tag = 101;
@@ -29,7 +32,8 @@
     [self addSubview:up];
     
     
-    UIButton *down = [[UIButton alloc] initWithFrame:CGRectMake(25, 50, 50, 50)];
+    UIButton *down = [[UIButton alloc] initWithFrame:CGRectMake(50, 100, 50, 50)];
+    down.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.5];
     [down setTitle:@"↓" forState:UIControlStateNormal];
     down.titleLabel.font = [UIFont systemFontOfSize:20.0];
     down.tag = 102;
@@ -37,7 +41,8 @@
     [self addSubview:down];
     
     
-    UIButton *left = [[UIButton alloc] initWithFrame:CGRectMake(0, 25, 50, 50)];
+    UIButton *left = [[UIButton alloc] initWithFrame:CGRectMake(0, 50, 50, 50)];
+    left.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.5];
     [left setTitle:@"←" forState:UIControlStateNormal];
     left.titleLabel.font = [UIFont systemFontOfSize:20.0];
     left.tag = 103;
@@ -45,13 +50,15 @@
     [self addSubview:left];
     
     
-    UIButton *right = [[UIButton alloc] initWithFrame:CGRectMake(50, 25, 50, 50)];
+    UIButton *right = [[UIButton alloc] initWithFrame:CGRectMake(100, 50, 50, 50)];
+    right.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.5];
     [right setTitle:@"→" forState:UIControlStateNormal];
     right.titleLabel.font = [UIFont systemFontOfSize:20.0];
     right.tag = 104;
     [right addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:right];
     
+    self.transform = CGAffineTransformMakeScale(0.5, 0.5);
     for (UIButton *b in [self subviews]) {
         b.hidden = YES;
     }
@@ -59,24 +66,32 @@
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap)];
     doubleTap.numberOfTapsRequired = 10;
     [self addGestureRecognizer:doubleTap];
+    
+    
 }
 
 - (void)doubleTap{
-    if (self.backgroundColor == [UIColor clearColor]) {
-        self.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.200];
-        for (UIButton *b in [self subviews]) {
-            b.hidden = NO;
-        }
+    if (!CGAffineTransformIsIdentity(self.transform)) {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.2];
+            self.transform = CGAffineTransformIdentity;
+            for (UIButton *b in [self subviews]) {
+                b.hidden = NO;
+            }
+        }];
     }else{
-        self.backgroundColor = [UIColor clearColor];
-        for (UIButton *b in [self subviews]) {
-            b.hidden = YES;
-        }
+        [UIView animateWithDuration:0.3 animations:^{
+            self.backgroundColor = [UIColor clearColor];
+            self.transform = CGAffineTransformMakeScale(0.5, 0.5);
+            for (UIButton *b in [self subviews]) {
+                b.hidden = YES;
+            }
+        }];
     }
 }
 
 - (void)buttonAction:(UIButton *)sender{
-    [sender.layer addAnimation:[self scaleAnimation] forKey:@"scale"];
+    [sender.titleLabel.layer addAnimation:[self scaleAnimation] forKey:@"scale"];
     
     if (self.controlCallback) {
         POControlViewDirection direction;
@@ -105,6 +120,8 @@
 - (CAAnimation *)scaleAnimation{
     CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
     scale.toValue = @1.5;
+    scale.duration = 0.3;
+    scale.removedOnCompletion = YES;
     return scale;
 }
 

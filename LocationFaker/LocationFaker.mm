@@ -15,6 +15,7 @@
 #import "POControlView.h"
 #import "UIButton+Block.h"
 #import "UIAlertView+Blocks.h"
+#import <objc/message.h>
 
 @interface CLLocation(Swizzle)
 
@@ -31,8 +32,8 @@ static float controlOffsetY = 0;
 /**
  *  默认出生点
  */
-static float defaultLatitude = -36.852400;
-static float defaultLongtitude = 174.762750;
+static float defaultLatitude = -33.8589681;
+static float defaultLongtitude = 151.2133306;
 
 static POControlView *controlV;
 
@@ -62,13 +63,15 @@ static POControlView *controlV;
     [self controlView];
     
     [self changeInitialLocationButton];
+    
+    [self addLoationDisplay];
 }
 
 - (CLLocationCoordinate2D) coordinate_ {
     
     CLLocationCoordinate2D pos = [self coordinate_];
     
-    // 算与联合广场的坐标偏移量
+    // 算与默认位置的偏移量
     if (x == -1 && y == -1) {
         
         x = pos.latitude - defaultLatitude;
@@ -78,6 +81,11 @@ static POControlView *controlV;
         [[NSUserDefaults standardUserDefaults] setValue:@(y) forKey:@"_fake_y"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
+    
+    // 更新label
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        locationLable.text = [NSString stringWithFormat:@"纬度：%.6f\n经度：%.6f",pos.latitude- x - (controlOffsetX), pos.longitude - y - (controlOffsetY)];
+    });
     
     return CLLocationCoordinate2DMake(pos.latitude- x - (controlOffsetX), pos.longitude - y - (controlOffsetY));
 }
@@ -167,6 +175,31 @@ static UIButton *locationButton;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(120 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [locationButton removeFromSuperview];
             });
+        });
+    }
+}
+
+static UILabel *locationLable;
++ (void)addLoationDisplay {
+    if (!locationLable) {
+        locationLable = [[UILabel alloc] init];
+        
+        locationLable.frame = CGRectMake([UIScreen mainScreen].bounds.size.width - 150, [UIScreen mainScreen].bounds.size.height - 60, 150, 40);
+        
+        locationLable.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.4];
+        
+        locationLable.textColor = [UIColor grayColor];
+        
+        locationLable.textAlignment = NSTextAlignmentCenter;
+        
+        locationLable.font = [UIFont systemFontOfSize:10.f];
+        
+        locationLable.numberOfLines = 0;
+        
+        locationLable.adjustsFontSizeToFitWidth = YES;
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[UIApplication sharedApplication].keyWindow addSubview:locationLable];
         });
     }
 }

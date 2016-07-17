@@ -13,6 +13,7 @@
 		0D0716621D33F1E900DF0ADE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D0716611D33F1E900DF0ADE /* QuartzCore.framework */; };
 		0DD6A04C1D3291AC001CF396 /* POControlView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0DD6A04A1D3291AC001CF396 /* POControlView.h */; };
 		0DD6A04D1D3291AC001CF396 /* POControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DD6A04B1D3291AC001CF396 /* POControlView.m */; };
+		4F60B9421D3BD0E700253C03 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F60B9411D3BD0E700253C03 /* CoreGraphics.framework */; };
 		AD779A9E1D2F2A330043F11C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD779A9D1D2F2A330043F11C /* Foundation.framework */; };
 		AD779AA81D2F2A350043F11C /* LocationFaker.mm in Sources */ = {isa = PBXBuildFile; fileRef = AD779AA71D2F2A350043F11C /* LocationFaker.mm */; };
 		AD779AB31D2F2B2F0043F11C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD779AB21D2F2B2F0043F11C /* CoreLocation.framework */; };
@@ -27,6 +28,7 @@
 		0D0716611D33F1E900DF0ADE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		0DD6A04A1D3291AC001CF396 /* POControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POControlView.h; sourceTree = "<group>"; };
 		0DD6A04B1D3291AC001CF396 /* POControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POControlView.m; sourceTree = "<group>"; };
+		4F60B9411D3BD0E700253C03 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		AD779A9A1D2F2A330043F11C /* LocationFaker.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = LocationFaker.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD779A9D1D2F2A330043F11C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AD779AA21D2F2A330043F11C /* control.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = control.txt; path = Package/DEBIAN/control.txt; sourceTree = "<group>"; };
@@ -45,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F60B9421D3BD0E700253C03 /* CoreGraphics.framework in Frameworks */,
 				0D0716621D33F1E900DF0ADE /* QuartzCore.framework in Frameworks */,
 				0D0716601D33F1E500DF0ADE /* UIKit.framework in Frameworks */,
 				AD779AB31D2F2B2F0043F11C /* CoreLocation.framework in Frameworks */,
@@ -75,6 +78,7 @@
 		AD779A9C1D2F2A330043F11C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4F60B9411D3BD0E700253C03 /* CoreGraphics.framework */,
 				0D0716611D33F1E900DF0ADE /* QuartzCore.framework */,
 				0D07165F1D33F1E500DF0ADE /* UIKit.framework */,
 				AD779AB21D2F2B2F0043F11C /* CoreLocation.framework */,
