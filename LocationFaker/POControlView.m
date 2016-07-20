@@ -125,4 +125,42 @@
     return scale;
 }
 
+#pragma mark override touch
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesMoved:touches withEvent:event];
+    
+    CGPoint pre = [[touches anyObject] previousLocationInView:self];
+    
+    CGPoint now = [[touches anyObject] locationInView:self];
+    
+    self.frame = CGRectApplyAffineTransform(self.frame, CGAffineTransformMakeTranslation(now.x - pre.x, now.y - pre.y));
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesEnded:touches withEvent:event];
+    
+    if (!CGRectContainsRect(self.superview.bounds, self.frame)) {
+        CGFloat deltaX = 0;
+        CGFloat deltaY = 0;
+        
+        if (self.frame.origin.x < 0) {
+            deltaX = -self.frame.origin.x;
+        }
+        else if (CGRectGetMaxX(self.frame) > self.superview.bounds.size.width) {
+            deltaX = -CGRectGetMaxX(self.frame) + self.superview.bounds.size.width;
+        }
+        
+        if (self.frame.origin.y < 0) {
+            deltaY = -self.frame.origin.y;
+        }
+        else if (CGRectGetMaxY(self.frame) > self.superview.bounds.size.height) {
+            deltaY = -CGRectGetMaxY(self.frame) + self.superview.bounds.size.height;
+        }
+        
+        [UIView animateWithDuration:0.3 animations:^{
+            self.frame = CGRectApplyAffineTransform(self.frame, CGAffineTransformMakeTranslation(deltaX, deltaY));
+        }];
+    }
+}
+
 @end

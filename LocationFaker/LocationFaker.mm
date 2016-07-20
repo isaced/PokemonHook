@@ -83,7 +83,7 @@ static POControlView *controlV;
     }
     
     // 更新label
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         locationLable.text = [NSString stringWithFormat:@"纬度：%.6f\n经度：%.6f",pos.latitude- x - (controlOffsetX), pos.longitude - y - (controlOffsetY)];
     });
     
@@ -184,11 +184,15 @@ static UILabel *locationLable;
     if (!locationLable) {
         locationLable = [[UILabel alloc] init];
         
-        locationLable.frame = CGRectMake([UIScreen mainScreen].bounds.size.width - 150, [UIScreen mainScreen].bounds.size.height - 60, 150, 40);
+        locationLable.frame = CGRectMake([UIScreen mainScreen].bounds.size.width - 100, [UIScreen mainScreen].bounds.size.height - 40, 100, 40);
+        
+        locationLable.layer.cornerRadius = 5.f;
+        
+        locationLable.clipsToBounds = YES;
         
         locationLable.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.4];
         
-        locationLable.textColor = [UIColor grayColor];
+        locationLable.textColor = [UIColor darkTextColor];
         
         locationLable.textAlignment = NSTextAlignmentCenter;
         
